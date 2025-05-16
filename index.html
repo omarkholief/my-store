@@ -5,6 +5,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>متجر المنتجات</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
             tailwind.config = { darkMode: 'class' }
@@ -31,9 +33,14 @@
 
                 <!-- روابط و زر الوضع على ديسكتوب -->
                 <nav class="hidden md:flex items-center space-x-4 space-x-reverse">
-                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">الرئيسية</a>
-                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">المنتجات</a>
-                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">السلة 🛒</a>
+                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400" title="الرئيسية">الرئيسية</a>
+                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400" title="المنتجات">المنتجات</a>
+                    <button id="cartButton"
+                        class="relative hover:text-blue-600 dark:hover:text-blue-400 flex items-center" title="السلة">
+                        السلة 🛒
+                        <span id="cartCount"
+                            class="absolute -top-2 -left-2 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </button>
 
                     <!-- زر تغيير الوضع -->
                     <button id="toggleMode"
@@ -67,38 +74,226 @@
             </div>
         </section>
 
-        <!-- سكريبتات -->
+        <!-- Products Section -->
+        <section id="products" class="container mx-auto px-4 py-12">
+            <h2 class="text-3xl font-bold mb-8 text-center">منتجاتنا</h2>
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                <!-- المنتجات هتظهر هنا -->
+            </div>
+        </section>
+
+        <!-- نافذة السلة -->
+        <div id="cartModal"
+            class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4 overflow-auto">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-lg p-6 flex flex-col">
+                <h3 class="text-xl font-bold mb-4 text-center">السلة</h3>
+                <div id="cartItems" class="flex-grow overflow-y-auto space-y-4">
+                    <!-- عناصر السلة -->
+                </div>
+                <div class="mt-4 flex justify-between items-center border-t pt-4">
+                    <span id="cartTotal" class="font-bold text-lg">الإجمالي: 0 $</span>
+                    <button id="closeCartBtn"
+                        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">إغلاق</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- نافذة الشراء الآن -->
+        <div id="buyNowModal"
+            class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4 overflow-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-lg max-w-xl w-full shadow-lg p-6 flex flex-col">
+                <h3 class="text-xl font-bold mb-4 text-center">إتمام الشراء</h3>
+                <div id="buyProductDetails" class="mb-4 text-sm text-gray-700 dark:text-gray-200">
+                    <!-- تفاصيل المنتج هنا -->
+                </div>
+                <form id="purchaseForm" class="space-y-4">
+                    <input type="text" placeholder="الاسم الكامل" required
+                        class="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100" />
+                    <input type="text" placeholder="العنوان" required
+                        class="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100" />
+                    <select required
+                        class="w-full p-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+                        <option value="">اختر طريقة الدفع</option>
+                        <option>بطاقة ائتمان</option>
+                        <option>الدفع عند الاستلام</option>
+                    </select>
+                    <button type="submit"
+                        class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">تأكيد
+                        الطلب</button>
+                </form>
+                <button id="closeBuyModal" class="mt-4 text-center text-red-600 hover:underline">إلغاء</button>
+            </div>
+        </div>
+
+        <section class="bg-white dark:bg-gray-900 py-12">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-2xl font-bold mb-6">لماذا تختارنا؟</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-4 rounded shadow bg-gray-100 dark:bg-gray-800">
+                        🚚 <p class="mt-2 font-bold">شحن سريع وآمن</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-300">توصيل إلى باب بيتك في وقت قياسي</p>
+                    </div>
+                    <div class="p-4 rounded shadow bg-gray-100 dark:bg-gray-800">
+                        🛡️ <p class="mt-2 font-bold">ضمان جودة</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-300">منتجات أصلية ومضمونة 100%</p>
+                    </div>
+                    <div class="p-4 rounded shadow bg-gray-100 dark:bg-gray-800">
+                        💳 <p class="mt-2 font-bold">طرق دفع متعددة</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-300">بطاقات، تحويل، أو عند الاستلام</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- آراء عملائنا -->
+        <section class="bg-gray-50 dark:bg-gray-800 py-12">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-2xl font-bold mb-6">آراء عملائنا</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" data-aos="fade-up">
+                    <div class="bg-white dark:bg-gray-700 p-4 rounded shadow" data-aos="zoom-in" data-aos-delay="200">
+                        <img src="images/avatar-4.jpg" alt="User"
+                            class="w-12 h-12 rounded-full object-cover items-center mx-auto mb-2">
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">— أحمد من القاهرة</p>
+                        <p>منتجات رائعة وخدمة سريعة جدًا! ⭐⭐⭐⭐⭐</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-4 rounded shadow" data-aos="zoom-in" data-aos-delay="200">
+                        <img src="images/team-02.png" alt="User"
+                            class="w-12 h-12 rounded-full object-cover items-center mx-auto mb-2">
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">— سارة من الرياض</p>
+                        <p>طلبت مرة وهطلب تاني أكيد. جودة ممتازة. 💯</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-700 p-4 rounded shadow" data-aos="zoom-in" data-aos-delay="200">
+                        <img src="images/avatar-5.jpg" alt="User"
+                            class="w-12 h-12 rounded-full object-cover items-center mx-auto mb-2">
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-300">— خالد من دبي</p>
+                        <p>أحببت تجربة الشراء وسهولة الاستخدام. 👍</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="bg-gray-100 dark:bg-gray-800 py-12" data-aos="fade-up">
+            <div class="container mx-auto px-4">
+                <h2 class="text-2xl font-bold mb-6 text-center">الأسئلة الشائعة</h2>
+                <div class="space-y-4 max-w-3xl mx-auto">
+                    <details class="bg-white dark:bg-gray-700 p-4 rounded shadow">
+                        <summary class="cursor-pointer font-semibold">ما هي مدة الشحن؟</summary>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">عادة خلال 1 إلى 5 أيام عمل حسب المدن.
+                        </p>
+                    </details>
+                    <details class="bg-white dark:bg-gray-700 p-4 rounded shadow">
+                        <summary class="cursor-pointer font-semibold">هل يمكن الدفع عند الاستلام؟</summary>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">نعم، نوفر هذه الخدمة في معظم المدن.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="bg-blue-600 text-white py-10">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-xl font-bold mb-4">اشترك في نشرتنا البريدية</h2>
+                <p class="mb-6">كن أول من يعرف عن العروض والمنتجات الجديدة</p>
+                <form class="flex flex-col sm:flex-row justify-center gap-4 max-w-xl mx-auto">
+                    <input type="email" placeholder="أدخل بريدك الإلكتروني"
+                        class="p-2 rounded text-gray-800 w-full sm:w-auto flex-grow focus:outline-none focus:ring-0"
+                        required />
+                    <button type="submit"
+                        class="bg-white text-blue-600 px-6 py-2 rounded hover:bg-gray-100 transition">اشترك</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-10 mt-16">
+            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+
+                <!-- الوصف -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">متجري</h2>
+                    <p class="text-gray-400">أفضل مكان للتسوق أونلاين. جودة عالية وخدمة ممتازة.</p>
+                </div>
+
+                <!-- روابط سريعة -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">روابط سريعة</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li>
+                            <a href="#"
+                                class="block transition-transform duration-300 hover:translate-x-2 hover:text-blue-400">الرئيسية</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block transition-transform duration-300 hover:translate-x-2 hover:text-blue-400">المنتجات</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block transition-transform duration-300 hover:translate-x-2 hover:text-blue-400">من
+                                نحن</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block transition-transform duration-300 hover:translate-x-2 hover:text-blue-400">اتصل
+                                بنا</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- تابعنا -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">تابعنا</h3>
+                    <div class="flex space-x-4 rtl:space-x-reverse">
+                        <a href="#" class="text-gray-400 hover:text-blue-600"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-blue-400"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-pink-600"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-green-600"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- روابط إضافية -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">معلومات</h3>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li><a href="#" class="hover:underline hover:text-white">سياسة الخصوصية</a></li>
+                        <li><a href="#" class="hover:underline hover:text-white">الشروط والأحكام</a></li>
+                        <li><a href="#" class="hover:underline hover:text-white">الدفع والاسترجاع</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- خط فاصل -->
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm space-y-2">
+                <p>جميع الحقوق محفوظة ©<span id="year"></span> - متجري</p>
+                <p class="text-blue-400 font-bold text-xl">Create By Omar Ibrahim</p>
+
+                <!-- رقم الموبايل -->
+                <div
+                    class="flex justify-center items-center space-x-2 rtl:space-x-reverse text-gray-300 hover:text-white transition duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 5a2 2 0 012-2h3.28a2 2 0 011.74 1.03l1.43 2.57a2 2 0 01-.45 2.49l-1.1.92a11.04 11.04 0 005.25 5.25l.92-1.1a2 2 0 012.49-.45l2.57 1.43A2 2 0 0119 18.72V22a2 2 0 01-2 2h-1C8.61 24 2 17.39 2 9V8a2 2 0 011-1.72z" />
+                    </svg>
+                    <a href="tel:+20 01020304941" class="hover:underline">01020304941 20+</a>
+                </div>
+                <a href="https://wa.me/201020304941" target="_blank"
+                    class="inline-flex items-center gap-2 mt-2 text-green-400 hover:text-green-500 transition">
+                    <i class="fab fa-whatsapp"></i> تواصل معنا عبر واتساب
+                </a>
+
+            </div>
+        </footer>
+
+
+
+        <script src="main.js"></script>
+
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-            const toggleBtn = document.getElementById("toggleMode");
-            const toggleBtnMobile = document.getElementById("toggleModeMobile");
-            const scrollBtn = document.getElementById("scrollTopBtn");
-
-            function updateIcon(isDark) {
-                const icon = isDark ? "☀" : "🌙";
-                toggleBtn.textContent = icon;
-                toggleBtnMobile.textContent = icon;
-            }
-
-            function toggleDarkMode() {
-                document.documentElement.classList.toggle("dark");
-                const isDark = document.documentElement.classList.contains("dark");
-                updateIcon(isDark);
-            }
-
-            toggleBtn.addEventListener("click", toggleDarkMode);
-            toggleBtnMobile.addEventListener("click", toggleDarkMode);
-
-            // تعيين الأيقونة على حسب الوضع الحالي عند تحميل الصفحة
-            updateIcon(document.documentElement.classList.contains("dark"));
-
-            // زر الرجوع للأعلى
-            window.addEventListener("scroll", () => {
-                scrollBtn.classList.toggle("hidden", window.scrollY <= 300);
-            });
-
-            scrollBtn.addEventListener("click", () => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
+            AOS.init();
         </script>
 
     </body>
