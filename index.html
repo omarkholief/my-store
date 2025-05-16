@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>متجر المنتجات</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = { darkMode: 'class' }
+        </script>
+        <style>
+            html {
+                scroll-behavior: smooth;
+            }
+        </style>
+    </head>
+
+    <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 relative">
+
+        <!-- زر الرجوع للأعلى -->
+        <button id="scrollTopBtn"
+            class="hidden fixed bottom-4 left-4 z-50 bg-blue-600 text-white p-3 rounded-full shadow hover:bg-blue-700 transition">
+            ↑
+        </button>
+
+        <!-- Navbar -->
+        <header class="sticky top-0 z-40 bg-white dark:bg-gray-800 shadow-md">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">متجري</div>
+
+                <!-- روابط و زر الوضع على ديسكتوب -->
+                <nav class="hidden md:flex items-center space-x-4 space-x-reverse">
+                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">الرئيسية</a>
+                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">المنتجات</a>
+                    <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">السلة 🛒</a>
+
+                    <!-- زر تغيير الوضع -->
+                    <button id="toggleMode"
+                        class="ml-6 p-2 rounded-full bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600 transition"
+                        title="تغيير الوضع">
+                        🌙
+                    </button>
+                </nav>
+
+                <!-- زر القائمة والهاتف -->
+                <div class="md:hidden flex items-center space-x-4 space-x-reverse">
+                    <!-- زر تغيير الوضع صغير للموبايل -->
+                    <button id="toggleModeMobile"
+                        class="p-2 rounded-full bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600 transition"
+                        title="تغيير الوضع">
+                        🌙
+                    </button>
+
+                    <button class="text-gray-700 dark:text-gray-300">القائمة ☰</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <section class="bg-blue-100 dark:bg-blue-900 py-12">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">أهلاً بك في متجرنا</h1>
+                <p class="text-lg md:text-xl mb-6">أفضل المنتجات بأفضل الأسعار</p>
+                <a href="#products"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition">ابدأ التسوق</a>
+            </div>
+        </section>
+
+        <!-- سكريبتات -->
+        <script>
+            const toggleBtn = document.getElementById("toggleMode");
+            const toggleBtnMobile = document.getElementById("toggleModeMobile");
+            const scrollBtn = document.getElementById("scrollTopBtn");
+
+            function updateIcon(isDark) {
+                const icon = isDark ? "☀" : "🌙";
+                toggleBtn.textContent = icon;
+                toggleBtnMobile.textContent = icon;
+            }
+
+            function toggleDarkMode() {
+                document.documentElement.classList.toggle("dark");
+                const isDark = document.documentElement.classList.contains("dark");
+                updateIcon(isDark);
+            }
+
+            toggleBtn.addEventListener("click", toggleDarkMode);
+            toggleBtnMobile.addEventListener("click", toggleDarkMode);
+
+            // تعيين الأيقونة على حسب الوضع الحالي عند تحميل الصفحة
+            updateIcon(document.documentElement.classList.contains("dark"));
+
+            // زر الرجوع للأعلى
+            window.addEventListener("scroll", () => {
+                scrollBtn.classList.toggle("hidden", window.scrollY <= 300);
+            });
+
+            scrollBtn.addEventListener("click", () => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        </script>
+
+    </body>
+
+</html>
