@@ -230,3 +230,49 @@ document.getElementById("toggleMode").addEventListener("click", toggleDarkMode);
 document
   .getElementById("toggleModeMobile")
   .addEventListener("click", toggleDarkMode);
+
+// التحكم في قائمة الشاشات الصغيرة
+const menuBtn = document.getElementById("menuBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+const closeMenuBtn = document.getElementById("closeMenuBtn");
+const menuOverlay = document.getElementById("menuOverlay");
+
+function openMenu() {
+  mobileMenu.classList.remove("translate-x-full");
+  mobileMenu.classList.add("translate-x-0");
+  menuOverlay.classList.remove("hidden");
+}
+
+function closeMenu() {
+  mobileMenu.classList.remove("translate-x-0");
+  mobileMenu.classList.add("translate-x-full");
+  menuOverlay.classList.add("hidden");
+}
+
+menuBtn.addEventListener("click", openMenu);
+closeMenuBtn.addEventListener("click", closeMenu);
+menuOverlay.addEventListener("click", closeMenu);
+
+// تحديث عدد المنتجات في السلة للشاشات الصغيرة
+function updateCartCountMobile() {
+  const cartCountMobile = document.getElementById("cartCountMobile");
+  let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCountMobile.textContent = totalItems;
+}
+
+// استدعاء الدالة مع التحديثات الأساسية
+function updateCartCount() {
+  const cartCount = document.getElementById("cartCount");
+  let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCount.textContent = totalItems;
+  updateCartCountMobile(); // تحديث السلة في قائمة الموبايل
+}
+
+// فتح وإغلاق نافذة السلة من زرار الموبايل
+const cartButtonMobile = document.getElementById("cartButtonMobile");
+cartButtonMobile.addEventListener("click", () => {
+  renderCartItems();
+  cartModal.classList.remove("hidden");
+  cartModal.classList.add("flex");
+  closeMenu(); // إغلاق القائمة لما نفتح السلة
+});
